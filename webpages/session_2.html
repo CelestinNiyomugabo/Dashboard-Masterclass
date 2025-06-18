@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <title>Session 2: Java Script</title>
+        <link rel="stylesheet" type="text/css" href="styles.css">
+    </head> 
+    <body>
+        <h1>Session 2: Java Script</h1>
+        <p>In this session, we will explore the basics of JavaScript, a powerful programming language used to create dynamic and interactive web content.</p>
+        
+        
+        <h2>Resources</h2>
+        <p>For more information, check out the following resources:</p>
+        <ul>
+            <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide">MDN Web Docs - JavaScript Guide</a></li>
+            <li><a href="https://www.w3schools.com/js/">W3Schools - JavaScript Tutorial</a></li>
+        </ul>
+
+        <h2>Grammar and Types</h2>
+        
+
+        <footer>
+            <p>&copy; 2023 Your Name. All rights reserved.</p>
+        </footer>
+    </body>
+</html>
+
+
+
+
+<script>
+    // Example of a simple JavaScript function
+    function greetUser() {
+        const course = "Dashboard Development"
+        alert("Welcome to Session 2: This session focus on JavaScript! "+ course);
+    }
+
+    // Call the function when the page loads
+    window.onload = greetUser;
+
+    // Updating a HTML element
+    document.addEventListener("DOMContentLoaded", function() {
+        const sessionTitle = document.querySelector("h1");
+        sessionTitle.textContent = "Session 2: JavaScript Basics updated with JavaScript";
+    });
+</script>
