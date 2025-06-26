@@ -85,27 +85,23 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% for tx in transactions %}
                             <tr>
-                                <td>1</td>
-                                <td>John Doe</td>
-                                <td>$250</td>
-                                <td><span class="badge bg-success">Paid</span></td>
-                                <td>June 10, 2025</td>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ tx.name }}</td>
+                                <td>${{ tx.amount }}</td>
+                                <td>
+                                    {% if tx.status == "Paid" %}
+                                        <span class="badge bg-success">{{ tx.status }}</span>
+                                    {% elif tx.status == "Pending" %}
+                                        <span class="badge bg-warning text-dark">{{ tx.status }}</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">{{ tx.status }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ tx.created_at }}</td>
                             </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Jane Smith</td>
-                                <td>$180</td>
-                                <td><span class="badge bg-warning text-dark">Pending</span></td>
-                                <td>June 11, 2025</td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>Michael Lee</td>
-                                <td>$300</td>
-                                <td><span class="badge bg-danger">Failed</span></td>
-                                <td>June 12, 2025</td>
-                            </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
