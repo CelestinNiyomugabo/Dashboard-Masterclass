@@ -1,3 +1,4 @@
+from types import SimpleNamespace
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
@@ -8,15 +9,44 @@ from django.shortcuts import render
 from django.db.models import Sum
 from .models import User, Error, Session, Transaction
 from datetime import timedelta
+from django.db import connection
 
 def index(request):
     # Get user count
-    user_count = User.objects.count()
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT COUNT(*) FROM main_user")
+        user_count = cursor.fetchone()[0]
+
+        cursor.execute("SELECT SUM(amount) FROM main_transaction WHERE status= 'Paid'")
+        total_revenue = cursor.fetchone()[0]
+        
+        cursor.execute("SELECT COUNT(*) FROM main_session WHERE created_at::date = CURRENT_DATE")
+        learned_sessions = cursor.fetchone()[0]
+
+        cursor.execute("SELECT * FROM main_transaction ORDER BY created_at DESC LIMIT 5")
+        rows = cursor.fetchall()
+        recent_transactions =[
+            SimpleNamespace(
+                id=row[0],
+                name=row[1],
+                amount=row[2],
+                status=row[3],
+                created_at=row[4]
+            )
+            for row in rows
+        ]
+        
+        
+
+
+
+
+    # user_count = User.objects.count()
     
     # Calculate total revenue from all successful transactions
-    total_revenue = Transaction.objects.filter(status='Paid').aggregate(
-        total=Sum('amount')
-    )['total'] or 0
+    # total_revenue = Transaction.objects.filter(status='Paid').aggregate(
+    #     total=Sum('amount')
+    # )['total'] or 0
     
     # For last 7 days stats:
     date_filter = timezone.now() - timedelta(days=7)
@@ -24,12 +54,12 @@ def index(request):
         created_at__gte=date_filter
     ).count()
     # Get active sessions count (example: sessions created today)
-    learned_sessions = Session.objects.filter(
-        created_at__date=timezone.now().date()
-    ).count()
+    # learned_sessions = Session.objects.filter(
+    #     created_at__date=timezone.now().date()
+    # ).count()
     
     # Get recent transactions
-    recent_transactions = Transaction.objects.order_by('created_at')[:10]
+    # recent_transactions = Transaction.objects.order_by('created_at')[:10]
 
     context = {
         'users': user_count,
